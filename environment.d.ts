@@ -3,6 +3,8 @@ declare global {
     interface ProcessEnv {
       PORT: string;
       PUBLIC_KEY: string;
+      APP_ID: string;
+      DISCORD_TOKEN: string;
     }
   }
 }

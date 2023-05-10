@@ -1,5 +1,6 @@
 import { verifyKey } from "discord-interactions";
 import { Request, Response } from "express";
+import { TCommand } from "./commands";
 
 export function VerifyDiscordRequest(clientKey: string) {
   return function (req: Request, res: Response, buf: Buffer) {
@@ -12,4 +13,40 @@ export function VerifyDiscordRequest(clientKey: string) {
       throw new Error("Bad request signature");
     }
   };
+}
+
+export async function DiscordRequest(endpoint: string, options: RequestInit) {
+  const url = "https://discord.com/api/v10/" + endpoint;
+  if (options.body) options.body = JSON.stringify(options.body);
+  const res = await fetch(url, {
+    headers: {
+      Authorization: `Bot ${process.env.DISCORD_TOKEN}`,
+      "Content-Type": "application/json; charset=UTF-8",
+      "User-Agent":
+        "DiscordBot (https://github.com/discord/discord-example-app, 1.0.0)",
+    },
+    ...options,
+  });
+  if (!res.ok) {
+    const data = await res.json();
+    console.log(res.status);
+    throw new Error(JSON.stringify(data));
+  }
+  return res;
+}
+
+export async function InstallGlobalCommands(
+  appId: string,
+  commands: Array<TCommand>
+) {
+  const endpoint = `applications/${appId}/commands`;
+  const commandsPayload = JSON.stringify(commands);
+  try {
+    await DiscordRequest(endpoint, {
+      method: "PUT",
+      body: commands as unknown as BodyInit,
+    });
+  } catch (err) {
+    console.error(err);
+  }
 }

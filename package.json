@@ -5,6 +5,7 @@
   "main": "dist/app.js",
   "scripts": {
     "dev": "ts-node -r dotenv/config src/app.ts",
+    "dev:js": "node -r dotenv/config dist/app.js",
     "start": "node .",
     "build": "tsc"
   },
