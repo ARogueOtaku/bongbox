@@ -2,10 +2,11 @@
   "name": "bongbot",
   "version": "1.0.0",
   "description": "A Discord Bot for my Server",
-  "main": "src/app.ts",
-  "type": "commonjs",
+  "main": "dist/app.js",
   "scripts": {
-    "dev": "ts-node -r dotenv/config ."
+    "dev": "ts-node -r dotenv/config src/app.ts",
+    "start": "node .",
+    "build": "tsc"
   },
   "keywords": [
     "Discord",
